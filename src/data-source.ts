@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from './models/User';
 
-export const AppDataSource = new DataSource({
+export const db = new DataSource({
   type: 'postgres',
   host: 'localhost',
   port: 5432,
