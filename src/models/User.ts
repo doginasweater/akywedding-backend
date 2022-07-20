@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,4 +13,12 @@ export class User extends BaseEntity {
 
   @Column()
   age: number;
+
+  constructor() {
+    super();
+    this.id = 0;
+    this.firstName = '';
+    this.lastName = '';
+    this.age = 0;
+  }
 }
