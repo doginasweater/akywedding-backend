@@ -1,3 +1,6 @@
 node_modules/
 *.db
 build/
+obj/
+bin/
+.DS_Store
