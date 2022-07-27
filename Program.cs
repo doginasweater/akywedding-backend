@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<WeddingContext>(opt =>
   opt.UseSqlite("Data Source=wedding.db"));
 
