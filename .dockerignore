@@ -3,3 +3,6 @@ obj/
 .vscode/
 .editorconfig
 .tool-versions
+*.db
+*.db-shm
+*.db-wal

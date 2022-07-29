@@ -7,5 +7,5 @@ namespace akywedding_backend.Controllers;
 [Route("[controller]")]
 public class HealthCheckController : ControllerBase {
   [HttpGet]
-  public IActionResult Get() => Ok();
+  public IActionResult Get() => Ok("hello");
 }
