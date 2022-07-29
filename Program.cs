@@ -8,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<WeddingContext>(opt =>
-  opt.UseSqlite("Data Source=wedding.db"));
+  opt.UseNpgsql(builder.Configuration["CONNECTION_STRING"]));
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -20,6 +22,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
   app.UseSwagger();
   app.UseSwaggerUI();
+  app.UseDeveloperExceptionPage();
+  app.UseMigrationsEndPoint();
+} else {
+  app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope()) {
+  var services = scope.ServiceProvider;
+  var ctx = services.GetRequiredService<WeddingContext>();
+
+  await ctx.Database.EnsureCreatedAsync();
+  await ctx.Database.MigrateAsync();
 }
 
 app.UseHttpsRedirection();
@@ -27,5 +41,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
