@@ -32,7 +32,6 @@ using (var scope = app.Services.CreateScope()) {
   var services = scope.ServiceProvider;
   var ctx = services.GetRequiredService<WeddingContext>();
 
-  await ctx.Database.EnsureCreatedAsync();
   await ctx.Database.MigrateAsync();
 }
 
@@ -41,6 +40,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();
