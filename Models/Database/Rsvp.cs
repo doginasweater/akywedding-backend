@@ -1,8 +1,8 @@
-namespace akywedding_backend.Models;
+namespace akywedding_backend.Models.Database;
 
-public class Reception {
+public class Rsvp {
   public long id { get; set; }
   public string music { get; set; } = "";
   public string comments { get; set; } = "";
-  public virtual Guest guest { get; set; } = new();
+  public virtual Party party { get; set; } = new();
 }

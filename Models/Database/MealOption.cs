@@ -1,4 +1,4 @@
-namespace akywedding_backend.Models;
+namespace akywedding_backend.Models.Database;
 
 public class MealOption {
   public long id { get; set; }
