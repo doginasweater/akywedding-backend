@@ -35,13 +35,8 @@ builder.Services.AddCors(opt => {
 
 builder.Services.AddControllers();
 
-if (builder.Environment.IsProduction()) {
-  builder.Services.AddDbContext<WeddingContext>(opt =>
-    opt.UseNpgsql(builder.Configuration["CONNECTION_STRING"]));
-} else {
-  builder.Services.AddDbContext<WeddingContext>(opt =>
-    opt.UseSqlite("Data Source=wedding.db"));
-}
+builder.Services.AddDbContext<WeddingContext>(opt =>
+  opt.UseNpgsql(builder.Configuration["CONNECTION_STRING"]));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
