@@ -1,18 +1,27 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using akywedding_backend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using akywedding_backend.Models.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// builder.Services.AddAuthentication()
-//   .AddJwtBearer(opt => {
-//     if (builder.Environment.IsDevelopment()) {
-//       opt.Audience = "http://localhost:5173";
-//       opt.Authority = "http://localhost:7149";
-//     }
-//   });
+builder.Services.AddAuthentication(opt => {
+  opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt => {
+  opt.TokenValidationParameters = new() {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = builder.Configuration["ISSUER"],
+    ValidAudience = builder.Configuration["AUDIENCE"],
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SECRET_KEY"]))
+  };
+});
 
 builder.Services.AddCors(opt => {
   opt.AddDefaultPolicy(policy => {
@@ -26,13 +35,8 @@ builder.Services.AddCors(opt => {
 
 builder.Services.AddControllers();
 
-if (builder.Environment.IsProduction()) {
-  builder.Services.AddDbContext<WeddingContext>(opt =>
-    opt.UseNpgsql(builder.Configuration["CONNECTION_STRING"]));
-} else {
-  builder.Services.AddDbContext<WeddingContext>(opt =>
-    opt.UseSqlite("Data Source=wedding.db"));
-}
+builder.Services.AddDbContext<WeddingContext>(opt =>
+  opt.UseNpgsql(builder.Configuration["CONNECTION_STRING"]));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -60,6 +64,7 @@ using (var scope = app.Services.CreateScope()) {
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
