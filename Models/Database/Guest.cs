@@ -7,5 +7,4 @@ public class Guest : Common {
   public bool? is_attending { get; set; }
   public MealOption? meal_choice { get; set; }
   public string? dietary_restrictions { get; set; }
-  public virtual Party party { get; set; }
 }

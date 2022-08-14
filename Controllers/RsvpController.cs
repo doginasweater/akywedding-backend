@@ -16,18 +16,17 @@ public class RsvpController : ControllerBase {
 
   [HttpPost("findparty")]
   public async Task<IActionResult> FindParty([FromBody] string name) {
-    var guest = await _ctx.guests
-      .Include(x => x.party)
-        .ThenInclude(x => x.guests)
-      .FirstOrDefaultAsync(x => x.name.ToLower().Contains(name.ToLower()));
+    var party = await _ctx.parties
+      .Include(x => x.guests)
+      .FirstOrDefaultAsync(x => x.guests.Any(y => y.name.ToLower().Contains(name.ToLower())));
 
-    if (guest is null) {
+    if (party is null) {
       return NotFound();
     }
 
     return Ok(new RsvpViewModel {
-      partyId = guest.party.id,
-      guests = guest.party.guests.Select(x => new GuestViewModel {
+      partyId = party.id,
+      guests = party.guests.Select(x => new GuestViewModel {
         guest_id = x.id,
         name = x.name
       })
