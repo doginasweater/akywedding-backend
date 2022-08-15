@@ -15,7 +15,7 @@ public class RsvpController : ControllerBase {
   }
 
   [HttpPost("findparty")]
-  public async Task<IActionResult> FindParty([FromBody] string name) {
+  public async Task<IActionResult> FindParty(string name) {
     var party = await _ctx.parties
       .Include(x => x.guests)
       .FirstOrDefaultAsync(x => x.guests.Any(y => y.name.ToLower().Contains(name.ToLower())));
