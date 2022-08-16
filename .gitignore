@@ -6,3 +6,5 @@ build/
 obj/
 bin/
 .DS_Store
+appsettings.Development.json
+notes.md
