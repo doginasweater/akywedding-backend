@@ -39,6 +39,6 @@ public class RsvpController : ControllerBase {
   [HttpGet("meals")]
   public async Task<IEnumerable<MealOption>> GetMeals() => await _ctx.mealOptions.ToListAsync();
 
-  [HttpGet("parties")]
-  public async Task<IEnumerable<Party>> GetParties() => await _ctx.parties.Include(x => x.guests).ToListAsync();
+  // [HttpGet("parties")]
+  // public async Task<IEnumerable<Party>> GetParties() => await _ctx.parties.Include(x => x.guests).ToListAsync();
 }
