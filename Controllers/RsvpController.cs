@@ -83,17 +83,25 @@ public class RsvpController : ControllerBase {
       })
       .ToListAsync();
 
-  [HttpGet("parties")]
-  public IEnumerable<Party> GetParties(string search) =>
-    _ctx.parties
-      .Include(x => x.guests)
-        .ThenInclude(x => x.meal_choice)
-      .ToList()
-      .Where(x => {
-        if (!string.IsNullOrEmpty(search)) {
-          return x.guests.Any(y => y.name.ToLower().Contains(search.ToLower()));
-        }
+  // [HttpGet("parties")]
+  // public IEnumerable<Party> GetParties(string search) =>
+  //   _ctx.parties
+  //     .Include(x => x.guests)
+  //       .ThenInclude(x => x.meal_choice)
+  //     .ToList()
+  //     .Where(x => {
+  //       if (!string.IsNullOrEmpty(search)) {
+  //         return x.guests.Any(y => y.name.ToLower().Contains(search.ToLower()));
+  //       }
 
-        return true;
-      });
+  //       return true;
+  //     });
+
+  // [HttpGet("rsvps")]
+  // public async Task<IEnumerable<Rsvp>> GetRsvps() =>
+  //   await _ctx.rsvps
+  //     .Include(x => x.party)
+  //       .ThenInclude(x => x.guests)
+  //         .ThenInclude(x => x.meal_choice)
+  //     .ToListAsync();
 }
