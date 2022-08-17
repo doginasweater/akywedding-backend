@@ -35,7 +35,7 @@ public class RsvpController : ControllerBase {
   }
 
   [HttpPost("submit")]
-  public async Task<IActionResult> SubmitRsvp([FromBody] RsvpViewModel rsvp) {
+  public async Task<IActionResult> SubmitRsvp(RsvpViewModel rsvp) {
     var party = await _ctx.parties
       .Include(x => x.guests)
         .ThenInclude(x => x.meal_choice)
@@ -83,17 +83,17 @@ public class RsvpController : ControllerBase {
       })
       .ToListAsync();
 
-  // [HttpGet("parties")]
-  // public IEnumerable<Party> GetParties(string search) =>
-  //   _ctx.parties
-  //     .Include(x => x.guests)
-  //       .ThenInclude(x => x.meal_choice)
-  //     .ToList()
-  //     .Where(x => {
-  //       if (!string.IsNullOrEmpty(search)) {
-  //         return x.guests.Any(y => y.name.ToLower().Contains(search.ToLower()));
-  //       }
+  [HttpGet("parties")]
+  public IEnumerable<Party> GetParties(string search) =>
+    _ctx.parties
+      .Include(x => x.guests)
+        .ThenInclude(x => x.meal_choice)
+      .ToList()
+      .Where(x => {
+        if (!string.IsNullOrEmpty(search)) {
+          return x.guests.Any(y => y.name.ToLower().Contains(search.ToLower()));
+        }
 
-  //       return true;
-  //     });
+        return true;
+      });
 }

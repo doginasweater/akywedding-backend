@@ -28,7 +28,7 @@ builder.Services.AddCors(opt => {
     if (builder.Environment.IsProduction()) {
       policy.WithOrigins("https://akyandrew2022.com", "https://www.akyandrew2022.com");
     } else {
-      policy.AllowAnyOrigin();
+      policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     }
   });
 });
@@ -45,6 +45,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
