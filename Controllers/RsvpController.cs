@@ -28,7 +28,8 @@ public class RsvpController : ControllerBase {
       partyId = party.id,
       guests = party.guests.Select(x => new GuestViewModel {
         guest_id = x.id,
-        name = x.name
+        name = x.name,
+        is_child = x.is_child,
       })
     });
   }
