@@ -8,11 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddAuthentication(opt => {
+builder.Services.AddAuthentication(opt =>
+{
   opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
   opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(opt => {
-  opt.TokenValidationParameters = new() {
+}).AddJwtBearer(opt =>
+{
+  opt.TokenValidationParameters = new()
+  {
     ValidateIssuer = true,
     ValidateAudience = true,
     ValidateLifetime = true,
@@ -23,12 +26,23 @@ builder.Services.AddAuthentication(opt => {
   };
 });
 
-builder.Services.AddCors(opt => {
-  opt.AddDefaultPolicy(policy => {
-    if (builder.Environment.IsProduction()) {
-      policy.WithOrigins("https://akyandrew2022.com", "https://www.akyandrew2022.com");
-    } else {
-      policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+builder.Services.AddCors(opt =>
+{
+  opt.AddDefaultPolicy(policy =>
+  {
+    if (builder.Environment.IsProduction())
+    {
+      policy
+        .WithOrigins("https://akyandrew2022.com", "https://www.akyandrew2022.com")
+        .WithMethods("GET", "POST", "OPTIONS")
+        .WithHeaders("content-type");
+    }
+    else
+    {
+      policy
+        .AllowAnyOrigin()
+        .WithMethods("GET", "POST", "OPTIONS")
+        .WithHeaders("content-type");
     }
   });
 });
@@ -48,16 +62,20 @@ var app = builder.Build();
 app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
   app.UseSwagger();
   app.UseSwaggerUI();
   app.UseDeveloperExceptionPage();
   app.UseMigrationsEndPoint();
-} else {
+}
+else
+{
   app.UseHsts();
 }
 
-using (var scope = app.Services.CreateScope()) {
+using (var scope = app.Services.CreateScope())
+{
   var services = scope.ServiceProvider;
   var ctx = services.GetRequiredService<WeddingContext>();
 
