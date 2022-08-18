@@ -1,5 +1,3 @@
-using akywedding_backend.Models.Database;
-
 namespace akywedding_backend.Models.ViewModels;
 
 public class GuestViewModel {
