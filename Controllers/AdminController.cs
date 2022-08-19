@@ -53,7 +53,7 @@ public class AdminController : ControllerBase {
     });
   }
 
-  [HttpDelete("{id}")]
+  [HttpDelete("rsvp/{id}")]
   public async Task<IActionResult> DeleteRsvp(int id) {
     var rsvp = await _ctx.rsvps.SingleOrDefaultAsync(x => x.id == id);
 
