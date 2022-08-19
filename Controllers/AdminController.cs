@@ -47,8 +47,10 @@ public class AdminController : ControllerBase {
         name = y.name,
         is_child = y.is_child,
         is_attending = y.is_attending == true,
-        meal_id = y.meal_choice.id,
-        dietary_restrictions = y.dietary_restrictions,
+        meal_id = y.meal_choice!.id,
+        dietary_restrictions = y.dietary_restrictions!,
+        created_at = y.created_at,
+        updated_at = y.updated_at,
       })
     });
   }
