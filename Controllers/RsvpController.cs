@@ -45,6 +45,8 @@ public class RsvpController : ControllerBase {
       return BadRequest("Party not found");
     }
 
+    var meals = await _ctx.mealOptions.ToArrayAsync();
+
     foreach (var guest in party.guests) {
       var guestModel = rsvp.guests.SingleOrDefault(x => x.guest_id == guest.id);
 
@@ -52,10 +54,14 @@ public class RsvpController : ControllerBase {
         return BadRequest($"Unable to find a response for ${guest.name}");
       }
 
-      guest.is_attending = guestModel.is_attending;
-      guest.dietary_restrictions = guestModel.dietary_restrictions;
-      guest.meal_choice = _ctx.mealOptions.Single(x => x.id == guestModel.meal_id);
-      guest.updated_at = DateTime.UtcNow;
+      try {
+        guest.is_attending = guestModel.is_attending;
+        guest.dietary_restrictions = guestModel.dietary_restrictions;
+        guest.meal_choice = guestModel.is_attending ? meals.Single(x => x.id == guestModel.meal_id) : null;
+        guest.updated_at = DateTime.UtcNow;
+      } catch (Exception e) {
+        return BadRequest("Unable to save guest");
+      }
     }
 
     var rsvpObj = new Rsvp {
