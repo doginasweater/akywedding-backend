@@ -7,10 +7,12 @@ namespace akywedding_backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdminController : ControllerBase {
+public class AdminController : ControllerBase
+{
   private readonly WeddingContext _ctx;
 
-  public AdminController(WeddingContext ctx) {
+  public AdminController(WeddingContext ctx)
+  {
     _ctx = ctx;
   }
 
@@ -20,8 +22,10 @@ public class AdminController : ControllerBase {
       .Include(x => x.guests)
         .ThenInclude(x => x.meal_choice)
       .ToList()
-      .Where(x => {
-        if (!string.IsNullOrEmpty(search)) {
+      .Where(x =>
+      {
+        if (!string.IsNullOrEmpty(search))
+        {
           return x.guests.Any(y => y.name.ToLower().Contains(search.ToLower()));
         }
 
@@ -29,20 +33,23 @@ public class AdminController : ControllerBase {
       });
 
   [HttpGet("rsvps")]
-  public async Task<IEnumerable<AdminRsvpViewModel>> GetRsvps() {
+  public async Task<IEnumerable<AdminRsvpViewModel>> GetRsvps()
+  {
     var query = await _ctx.rsvps
       .Include(x => x.party)
         .ThenInclude(x => x.guests)
           .ThenInclude(x => x.meal_choice)
       .ToListAsync();
 
-    return query.Select(x => new AdminRsvpViewModel {
+    return query.Select(x => new AdminRsvpViewModel
+    {
       rsvp_id = x.id,
       comments = x.comments,
       music = x.music,
       created_at = x.created_at,
       updated_at = x.updated_at,
-      guests = x.party.guests.Select(y => new GuestViewModel {
+      guests = x.party.guests.Select(y => new GuestViewModel
+      {
         guest_id = y.id,
         name = y.name,
         is_child = y.is_child,
@@ -56,10 +63,14 @@ public class AdminController : ControllerBase {
   }
 
   [HttpDelete("rsvp/{id}")]
-  public async Task<IActionResult> DeleteRsvp(int id) {
-    var rsvp = await _ctx.rsvps.SingleOrDefaultAsync(x => x.id == id);
+  public async Task<IActionResult> DeleteRsvp(int id)
+  {
+    var rsvp = await _ctx.rsvps
 
-    if (rsvp is null) {
+    .SingleOrDefaultAsync(x => x.id == id);
+
+    if (rsvp is null)
+    {
       return Ok();
     }
 
@@ -69,4 +80,38 @@ public class AdminController : ControllerBase {
 
     return NoContent();
   }
+
+
+  //Aky's first C# Method :)
+
+  // [HttpGet("fix-rsvp")]
+  // public async Task<IActionResult> FixKevinStevens()
+  // {
+  //   var rsvp = await _ctx.rsvps
+  //       .Include(x => x.party)
+  //         .ThenInclude(x => x.guests)
+  //         .ThenInclude(x => x.meal_choice)
+  //         .SingleOrDefaultAsync(x => x.id == 1);
+
+  //   if (rsvp is null)
+  //   {
+  //     return BadRequest();
+  //   }
+
+  //   foreach (var guest in rsvp.party.guests)
+  //   {
+  //     guest.meal_choice = await _ctx.mealOptions.SingleOrDefaultAsync(x => x.name == "Chicken");
+  //     guest.is_attending = true;
+  //     guest.updated_at = DateTime.UtcNow;
+  //   }
+
+  //   try { 
+  //     await _ctx.SaveChangesAsync();
+  //     return Ok();
+  //   } catch (Exception e) {
+  //     return BadRequest(e.Message);
+  //   }
+  // }
+
 }
+
