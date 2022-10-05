@@ -84,34 +84,61 @@ public class AdminController : ControllerBase
 
   //Aky's first C# Method :)
 
-  // [HttpGet("fix-rsvp")]
-  // public async Task<IActionResult> FixKevinStevens()
-  // {
-  //   var rsvp = await _ctx.rsvps
-  //       .Include(x => x.party)
-  //         .ThenInclude(x => x.guests)
-  //         .ThenInclude(x => x.meal_choice)
-  //         .SingleOrDefaultAsync(x => x.id == 1);
+  [HttpGet("fix-rsvp")]
+  public async Task<IActionResult> FixKevinStevens()
+  {
+    var rsvp = await _ctx.rsvps
+        .Include(x => x.party)
+          .ThenInclude(x => x.guests)
+          .ThenInclude(x => x.meal_choice)
+          .SingleOrDefaultAsync(x => x.id == 1);
 
-  //   if (rsvp is null)
-  //   {
-  //     return BadRequest();
-  //   }
+    if (rsvp is null)
+    {
+      return BadRequest();
+    }
 
-  //   foreach (var guest in rsvp.party.guests)
-  //   {
-  //     guest.meal_choice = await _ctx.mealOptions.SingleOrDefaultAsync(x => x.name == "Chicken");
-  //     guest.is_attending = true;
-  //     guest.updated_at = DateTime.UtcNow;
-  //   }
+    foreach (var guest in rsvp.party.guests)
+    {
+      guest.meal_choice = await _ctx.mealOptions.SingleOrDefaultAsync(x => x.name == "Chicken");
+      guest.is_attending = true;
+      guest.updated_at = DateTime.UtcNow;
+    }
 
-  //   try { 
-  //     await _ctx.SaveChangesAsync();
-  //     return Ok();
-  //   } catch (Exception e) {
-  //     return BadRequest(e.Message);
-  //   }
-  // }
+    try
+    {
+      await _ctx.SaveChangesAsync();
+      return Ok();
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+    }
+  }
+
+  //Aky's SECOND!!! C# method :D
+
+  [HttpGet("meal-counts")]
+  public async Task<IActionResult> GetMealCounts()
+  {
+    var meals = await _ctx.guests
+            .Include(x => x.meal_choice)
+          .Where(x => x.is_attending == true)
+          .ToListAsync();
+
+
+    var grouped = meals.GroupBy(x => x.meal_choice.id)
+    .Select(x => new
+    {
+      meal_name = x.First().meal_choice.name,
+      count = x.Count()
+  });
+
+    return Ok(grouped);
+  }
+
 
 }
+
+
 
