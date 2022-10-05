@@ -131,15 +131,49 @@ public class AdminController : ControllerBase
     .Select(x => new
     {
       meal_id = x.Key,
-    meal_name = x.First().meal_choice.name,
+      meal_name = x.First().meal_choice.name,
       count = x.Count()
-  });
+    });
 
     return Ok(grouped);
   }
 
 
-}
+  //THE THIRD ONE!!!!!!!!!
+  // [HttpGet("attending-numbers")]
+  // public IActionResult GetAttendingNumbers()
+  // {
+  //   return Ok(new
+  //   {
+  //     attending = _ctx.guests.Where(x => x.is_attending == true).Count(),
+  //     not_attending = _ctx.guests.Where(x => x.is_attending == false).Count(),
+  //   });
+  // }
 
+  //FOUR
+
+  [HttpGet("attending-guests")]
+  public async Task<IActionResult> GetAttendingGuests()
+  {
+    var guests = await _ctx.guests.ToListAsync();
+
+    var attending = guests.Where(x => x.is_attending == true);
+    var not_attending = guests.Where(x => x.is_attending == false);
+
+    return Ok(new
+    {
+      attending = new
+      {
+        count = attending.Count(),
+        guests = attending.Select(x => x.name)
+      },
+      not_attending = new
+      {
+        count = not_attending.Count(),
+        guests = not_attending.Select(x => x.name),
+      }
+    });
+  }
+}
 
 
