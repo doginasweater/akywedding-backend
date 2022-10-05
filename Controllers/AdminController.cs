@@ -130,7 +130,8 @@ public class AdminController : ControllerBase
     var grouped = meals.GroupBy(x => x.meal_choice.id)
     .Select(x => new
     {
-      meal_name = x.First().meal_choice.name,
+      meal_id = x.Key,
+    meal_name = x.First().meal_choice.name,
       count = x.Count()
   });
 
